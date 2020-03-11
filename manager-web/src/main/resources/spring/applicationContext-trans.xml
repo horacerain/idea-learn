@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+                http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+                http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+<import resource="applicationContext-dao.xml"/>
+
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <tx:annotation-driven transaction-manager="txManager" />
+
+    <tx:advice id="transactionAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="find*" propagation="REQUIRED" />
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="del*" propagation="REQUIRED" />
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="cancel*" propagation="REQUIRED" />
+            <tx:method name="create*" propagation="REQUIRED" />
+            <tx:method name="reject*" propagation="REQUIRED" />
+            <tx:method name="withdraw*" propagation="REQUIRED" />
+            <tx:method name="submit*" propagation="REQUIRED" />
+            <tx:method name="read*" propagation="REQUIRED" />
+            <tx:method name="get*" propagation="REQUIRED" />
+            <tx:method name="check*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="query*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="findAndSave" propagation="REQUIRED" isolation="SERIALIZABLE"/>
+            <tx:method name="search*" propagation="REQUIRED"/>
+            <tx:method name="batchUpdate*" propagation="REQUIRED"/>
+            <tx:method name="process*" propagation="REQUIRED"/>
+            <tx:method name="paginationTcData" propagation="REQUIRED"/>
+            <tx:method name="execute*" propagation="REQUIRED"/>
+
+            <tx:method name="search" propagation="REQUIRED"/>
+            <tx:method name="accepted*" propagation="REQUIRED"/>
+            <tx:method name="res*" propagation="REQUIRED"/>
+            <tx:method name="is*" propagation="REQUIRED"/>
+            <tx:method name="init*" propagation="REQUIRED" />
+            <tx:method name="sta*" propagation="REQUIRED" />
+            <tx:method name="batch*" propagation="REQUIRED"/>
+            <tx:method name="next*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="pre*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="sear*" propagation="REQUIRED" read-only="true"/>
+            <tx:method name="pag*" propagation="REQUIRED" />
+            <tx:method name="has*" propagation="REQUIRED" />
+            <tx:method name="publish*" propagation="REQUIRED" />
+            <tx:method name="revoke*" propagation="REQUIRED" />
+            <tx:method name="destroy*" propagation="REQUIRED" />
+            <tx:method name="start*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config proxy-target-class="true">
+        <aop:pointcut id="txp1"
+                      expression="execution(* com.horace.service.*.*(..))" />
+        <aop:advisor advice-ref="transactionAdvice" pointcut-ref="txp1" />
+    </aop:config>
+</beans>
